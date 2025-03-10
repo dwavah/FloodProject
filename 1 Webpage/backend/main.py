@@ -4,6 +4,7 @@ import requests
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+import pandas as pd
 
 app = FastAPI()
 
@@ -15,6 +16,7 @@ SHEET_RANGE = 'Sheet1!B:C'  # Fetch only columns B and C
 # Model loading (Ensure the model file is accessible)
 model_path = 'flood_v1.pkl'
 model = joblib.load(model_path)
+
 
 # Function to fetch the last two rows from Google Sheets
 def fetch_sheet_data():
@@ -32,40 +34,49 @@ def fetch_sheet_data():
     else:
         return []
 
-# Function to make a prediction using the loaded model
-# Function to make a prediction using the loaded model
-import pandas as pd
 
 # Function to make a prediction using the loaded model
 def make_prediction():
     data = fetch_sheet_data()
     
-    if not data or len(data) < 2:
+    if not data:
         return {"error": "Not enough data for prediction"}
     
     try:
-        # Convert the last two rows of column B and C to floats
-        features = [[float(row[0]), float(row[1])] for row in data if len(row) == 2]  
+        # Use only the latest row for prediction
+        latest_row = data[-1] if len(data[-1]) == 2 else None
         
-        if len(features) != 2:  # Ensure we have exactly two valid rows
-            return {"error": "Insufficient valid data points"}
+        if not latest_row:
+            return {"error": "Latest row data incomplete"}
         
-        # Convert to DataFrame with correct column names
-        feature_names = ["Distance", "Flowrate"]  # Use the actual names from model training
+        # Convert values to float
+        features = [[float(latest_row[0]), float(latest_row[1])]]
+
+        # Correct column names as per model training
+        feature_names = ["Distance", "FlowRate"]
         df_features = pd.DataFrame(features, columns=feature_names)
 
-        # Make prediction using the trained model
-        prediction = model.predict(df_features)  
-        return prediction.tolist()
+        # Optional debug prints
+        print("Features for prediction:", df_features)
+
+        # Make prediction
+        prediction = model.predict(df_features)  # Returns list like [1] or [0]
+        result = prediction[0]  # Get the single value
+
+        # Map prediction to human-readable text
+        if result == 1:
+            return "Flood Risk"
+        else:
+            return "No Flood Risk"
     
     except Exception as e:
         return {"error": str(e)}
 
 
-
 # Define a Pydantic model for the response
 class PredictionResponse(BaseModel):
     prediction: str
+
 
 # Endpoint to fetch data and return prediction
 @app.get("/predict", response_model=PredictionResponse)
@@ -75,7 +86,7 @@ def predict():
     if isinstance(prediction, dict) and "error" in prediction:
         return PredictionResponse(prediction=prediction["error"])
     
-    return PredictionResponse(prediction=str(prediction))
+    return PredictionResponse(prediction=prediction)
 
 
 # Allow all origins, methods, and headers (for development only)
