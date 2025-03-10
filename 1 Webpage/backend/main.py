@@ -48,16 +48,15 @@ def make_prediction():
         
         if not latest_row:
             return {"error": "Latest row data incomplete"}
-        
-        # Convert values to float
-        features = [[float(latest_row[0]), float(latest_row[1])]]
 
-        # Correct column names as per model training
+        # Extract readings
+        distance = float(latest_row[0])
+        flowrate = float(latest_row[1])
+
+        # Prepare features
+        features = [[distance, flowrate]]
         feature_names = ["Distance", "FlowRate"]
         df_features = pd.DataFrame(features, columns=feature_names)
-
-        # Optional debug prints
-        print("Features for prediction:", df_features)
 
         # Make prediction
         prediction = model.predict(df_features)  # Returns list like [1] or [0]
@@ -65,9 +64,16 @@ def make_prediction():
 
         # Map prediction to human-readable text
         if result == 1:
-            return "Flood Risk"
+            prediction_text = "Flood Risk"
         else:
-            return "No Flood Risk"
+            prediction_text = "No Flood Risk"
+
+        # Return both readings and prediction
+        return {
+            "Distance": distance,
+            "FlowRate": flowrate,
+            "Prediction": prediction_text
+        }
     
     except Exception as e:
         return {"error": str(e)}
@@ -75,18 +81,25 @@ def make_prediction():
 
 # Define a Pydantic model for the response
 class PredictionResponse(BaseModel):
-    prediction: str
+    Distance: float
+    FlowRate: float
+    Prediction: str
 
 
 # Endpoint to fetch data and return prediction
 @app.get("/predict", response_model=PredictionResponse)
 def predict():
-    prediction = make_prediction()
+    prediction_data = make_prediction()
     
-    if isinstance(prediction, dict) and "error" in prediction:
-        return PredictionResponse(prediction=prediction["error"])
+    if isinstance(prediction_data, dict) and "error" in prediction_data:
+        # Return empty/default values on error
+        return PredictionResponse(Distance=0.0, FlowRate=0.0, Prediction=prediction_data["error"])
     
-    return PredictionResponse(prediction=prediction)
+    return PredictionResponse(
+        Distance=prediction_data["Distance"],
+        FlowRate=prediction_data["FlowRate"],
+        Prediction=prediction_data["Prediction"]
+    )
 
 
 # Allow all origins, methods, and headers (for development only)
