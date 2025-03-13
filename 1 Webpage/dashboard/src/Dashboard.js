@@ -139,32 +139,39 @@ export default function Dashboard() {
   };
 
   return (
-    <Container>
-      <TitleText>Flood Prediction Dashboard</TitleText>
 
-      <Section>
-        {chartData ? <Line data={chartData} /> : <p>Loading data...</p>}
-      </Section>
-
-      <Section>
-        <Card>
-          <h3>Latest Sensor Readings</h3>
-          <SensorItem><strong>Distance:</strong> {distance} m</SensorItem>
-          <SensorItem><strong>Flow Rate:</strong> {flowRate} m³/s</SensorItem>
-          <Button onClick={handleRefresh}>Refresh Data</Button>
-        </Card>
-
-        <Card>
-          <h3>Prediction</h3>
-          {prediction ? (
-            <PredictionText isRisk={prediction === "Flood Risk"}>
-              {prediction === "Flood Risk" ? "⚠️ " : "✅ "} {prediction}
-            </PredictionText>
-          ) : (
-            <p>Loading prediction...</p>
-          )}
-        </Card>
-      </Section>
-    </Container>
-  );
+      <Container>
+        <TitleText>Flood Prediction Dashboard</TitleText>
+    
+        <div className="dashboard-layout">
+          
+          {/* Left Side - Chart */}
+          <div className="graph-section">
+            {chartData ? <Line data={chartData} /> : <p>Loading data...</p>}
+          </div>
+    
+          {/* Right Side - Sensor Readings + Prediction */}
+          <div className="info-section">
+            <Card>
+              <h3>Latest Sensor Readings</h3>
+              <SensorItem><strong>Distance:</strong> {distance} m</SensorItem>
+              <SensorItem><strong>Flow Rate:</strong> {flowRate} m³/s</SensorItem>
+              <Button onClick={handleRefresh}>Refresh Data</Button>
+            </Card>
+    
+            <Card>
+              <h3>Prediction</h3>
+              {prediction ? (
+                <PredictionText isRisk={prediction === "Flood Risk"}>
+                  {prediction === "Flood Risk" ? "⚠️ " : "✅ "} {prediction}
+                </PredictionText>
+              ) : (
+                <p>Loading prediction...</p>
+              )}
+            </Card>
+          </div>
+        </div>
+      </Container>
+    );
+    
 }
