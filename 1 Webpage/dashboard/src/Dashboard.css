@@ -1,54 +1,91 @@
+/* Main horizontal layout */
 .dashboard-container {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    margin-top: 20px;
-  }
-  
-  .graph-container {
-    width: 60%;
-    padding: 20px;
-    background-color: #f4f7f6;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .content-container {
-    width: 35%;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .upload-container {
-    width: 100%;
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-  }
-  
-  h2 {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
-  p {
-    color: #555;
-    font-size: 16px;
-  }
-  
-  input[type='file'] {
-    padding: 10px;
-    background-color: #1e90ff;
-    border: none;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  input[type='file']:hover {
-    background-color: #0073e6;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+/* Left side - Graph container */
+.graph-container {
+  flex: 2;
+  padding: 20px;
+  background-color: #f4f7f6;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Right side - Sensor readings + prediction (stacked vertically) */
+.content-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Individual cards (Sensor Readings & Prediction) */
+.content-container .card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Upload button container (still preserved for later use) */
+.upload-container {
+  width: 100%;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Headings */
+h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Paragraph */
+p {
+  color: #555;
+  font-size: 16px;
+}
+
+/* File input styling */
+input[type='file'] {
+  padding: 10px;
+  background-color: #1e90ff;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+input[type='file']:hover {
+  background-color: #0073e6;
+}
+
+/* Button style (reuse if needed) */
+button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Chart responsiveness fix */
+.graph-container canvas {
+  width: 100% !important;
+  height: auto !important;
+}
