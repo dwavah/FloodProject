@@ -6,7 +6,7 @@ import './Dashboard.css';  // Import the dashboard styling
 function App() {
   return (
     <div className="App">
-      <h1 className="app-header">Flood Monitoring Dashboard</h1>
+      <h1 className="app-header">FLOOD MONITORING DASHBOARD</h1>
       <Dashboard />
     </div>
   );

@@ -38,15 +38,15 @@ export default function Dashboard() {
         labels: labels,
         datasets: [
           {
-            label: 'Distance (m)',
+            label: 'Distance (cm)',
             data: distanceData,
-            borderColor: 'rgb(13, 96, 220)', // Blue
+            borderColor: '#4dabf7', // Light blue for better visibility
             tension: 0.3,
           },
           {
-            label: 'Flowrate (m³/s)',
+            label: 'Flowrate (L/min)',
             data: flowrateData,
-            borderColor: 'rgb(254, 137, 4)', // Orange
+            borderColor: '#ffa94d', // Light orange for better visibility
             tension: 0.3,
           },
         ],
@@ -56,6 +56,39 @@ export default function Dashboard() {
     } else {
       console.log("No sheet data available.");
       setChartData(null);
+    }
+  };
+
+  // ✅ Chart.js options for dark mode with vertical lines removed
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: {
+          color: '#E0E0E0', // Legend text color
+        }
+      },
+      title: {
+        display: false
+      }
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: '#E0E0E0' // X-axis label color
+        },
+        grid: {
+          display: false // ❌ Removes vertical grid lines
+        }
+      },
+      y: {
+        ticks: {
+          color: '#E0E0E0' // Y-axis label color
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)' // ✅ Light white horizontal grid lines
+        }
+      }
     }
   };
 
@@ -88,24 +121,24 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h2 style={{ textAlign: 'center', marginTop: '20px' }}>Real-Time Data</h2>
+      <h2 style={{ textAlign: 'center', marginTop: '20px', color: '#FFFFFF' }}>DANIEL WAVAMUNNO | S23B23/091</h2>
 
       <div className="dashboard-container">
 
         {/* Left side - Graph */}
         <div className="graph-container">
-        <h2 style={{ textAlign: 'center', marginTop: '20px' }}>Chart Visualization</h2>
-          {chartData ? <Line data={chartData} /> : <p>Loading data...</p>}
+          <h2 style={{ textAlign: 'center', marginTop: '20px', color: '#FFFFFF' }}>Chart Visualization</h2>
+          {chartData ? <Line data={chartData} options={chartOptions} /> : <p style={{ color: '#E0E0E0' }}>Loading data...</p>}
         </div>
 
         {/* Right side - Readings + Prediction */}
         <div className="content-container">
-
+          <h2 style={{ textAlign: 'center', marginTop: '20px', color: '#FFFFFF' }}>Readings & Prediction</h2>
           {/* Latest Sensor Readings */}
           <div className="card">
-            <h3>Latest Sensor Readings<br></br>(Updated every 10 seconds)</h3>
+            <h3>Latest Sensor Readings</h3>
             <p><strong>Distance:</strong> {distance} cm</p>
-            <p><strong>Flow Rate:</strong> {flowRate} L/m</p>
+            <p><strong>Flow Rate:</strong> {flowRate} L/min</p>
             <button onClick={handleRefresh}>Refresh Data</button>
           </div>
 
@@ -124,9 +157,24 @@ export default function Dashboard() {
               <p>Loading prediction...</p>
             )}
           </div>
-
         </div>
       </div>
+
+      {/* Footer Section */}
+      <footer className="footer">
+        <div className="footer-links">
+          <a href="https://github.com/your-repo-link" target="_blank" rel="noopener noreferrer">GitHub-Code</a>
+          <a href="https://your-documentation-link" target="_blank" rel="noopener noreferrer">Documentation</a>
+          <a href="https://your-poster-link" target="_blank" rel="noopener noreferrer">Research-Poster</a>
+          <a href="https://your-documentation-link" target="_blank" rel="noopener noreferrer">Documentation</a>
+          <a href="https://your-documentation-link" target="_blank" rel="noopener noreferrer">Documentation</a>
+          <a href="https://your-documentation-link" target="_blank" rel="noopener noreferrer">Documentation</a>
+          <a href="https://your-documentation-link" target="_blank" rel="noopener noreferrer">Documentation</a>
+        </div>
+        <div className="footer-copy">
+          © 2025 Floods in Uganda [Simulation of River Manafwa]. All rights reserved.
+        </div>
+      </footer>
     </div>
   );
 }
