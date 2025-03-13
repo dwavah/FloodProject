@@ -88,12 +88,13 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h2 style={{ textAlign: 'center', marginTop: '20px' }}>Flood Prediction Dashboard</h2>
+      <h2 style={{ textAlign: 'center', marginTop: '20px' }}>Real-Time Data</h2>
 
       <div className="dashboard-container">
 
         {/* Left side - Graph */}
         <div className="graph-container">
+        <h2 style={{ textAlign: 'center', marginTop: '20px' }}>Chart Visualization</h2>
           {chartData ? <Line data={chartData} /> : <p>Loading data...</p>}
         </div>
 
@@ -102,9 +103,9 @@ export default function Dashboard() {
 
           {/* Latest Sensor Readings */}
           <div className="card">
-            <h3>Latest Sensor Readings</h3>
-            <p><strong>Distance:</strong> {distance} m</p>
-            <p><strong>Flow Rate:</strong> {flowRate} m³/s</p>
+            <h3>Latest Sensor Readings<br></br>(Updated every 10 seconds)</h3>
+            <p><strong>Distance:</strong> {distance} cm</p>
+            <p><strong>Flow Rate:</strong> {flowRate} L/m</p>
             <button onClick={handleRefresh}>Refresh Data</button>
           </div>
 
