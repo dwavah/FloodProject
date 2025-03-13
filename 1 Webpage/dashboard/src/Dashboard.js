@@ -2,62 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import fetchSheetData from './api/googleSheets';
-import styled from 'styled-components';
+import './Dashboard.css'; // Link to your CSS layout file
 
 // Register Chart.js modules
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
-
-// Styled Components
-const Container = styled.div`
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  max-width: 900px;
-  margin: auto;
-`;
-
-const TitleText = styled.h2`
-  margin-bottom: 20px;
-  text-align: center;
-`;
-
-const Section = styled.div`
-  margin-bottom: 30px;
-`;
-
-const Card = styled.div`
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
-`;
-
-const SensorItem = styled.p`
-  margin: 10px 0;
-  font-size: 16px;
-`;
-
-const PredictionText = styled.p`
-  font-size: 22px;
-  font-weight: bold;
-  margin: 15px 0;
-  color: ${(props) => (props.isRisk ? '#e63946' : '#2a9d8f')};
-`;
-
-const Button = styled.button`
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 10px;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
 
 export default function Dashboard() {
   const [chartData, setChartData] = useState(null);
@@ -139,39 +87,45 @@ export default function Dashboard() {
   };
 
   return (
+    <div>
+      <h2 style={{ textAlign: 'center', marginTop: '20px' }}>Flood Prediction Dashboard</h2>
 
-      <Container>
-        <TitleText>Flood Prediction Dashboard</TitleText>
-    
-        <div className="dashboard-layout">
-          
-          {/* Left Side - Chart */}
-          <div className="graph-section">
-            {chartData ? <Line data={chartData} /> : <p>Loading data...</p>}
-          </div>
-    
-          {/* Right Side - Sensor Readings + Prediction */}
-          <div className="info-section">
-            <Card>
-              <h3>Latest Sensor Readings</h3>
-              <SensorItem><strong>Distance:</strong> {distance} m</SensorItem>
-              <SensorItem><strong>Flow Rate:</strong> {flowRate} m³/s</SensorItem>
-              <Button onClick={handleRefresh}>Refresh Data</Button>
-            </Card>
-    
-            <Card>
-              <h3>Prediction</h3>
-              {prediction ? (
-                <PredictionText isRisk={prediction === "Flood Risk"}>
-                  {prediction === "Flood Risk" ? "⚠️ " : "✅ "} {prediction}
-                </PredictionText>
-              ) : (
-                <p>Loading prediction...</p>
-              )}
-            </Card>
-          </div>
+      <div className="dashboard-container">
+
+        {/* Left side - Graph */}
+        <div className="graph-container">
+          {chartData ? <Line data={chartData} /> : <p>Loading data...</p>}
         </div>
-      </Container>
-    );
-    
+
+        {/* Right side - Readings + Prediction */}
+        <div className="content-container">
+
+          {/* Latest Sensor Readings */}
+          <div className="card">
+            <h3>Latest Sensor Readings</h3>
+            <p><strong>Distance:</strong> {distance} m</p>
+            <p><strong>Flow Rate:</strong> {flowRate} m³/s</p>
+            <button onClick={handleRefresh}>Refresh Data</button>
+          </div>
+
+          {/* Prediction Card */}
+          <div className="card">
+            <h3>Prediction</h3>
+            {prediction ? (
+              <p style={{
+                fontWeight: 'bold',
+                fontSize: '20px',
+                color: prediction === 'Flood Risk' ? '#e63946' : '#2a9d8f'
+              }}>
+                {prediction === 'Flood Risk' ? '⚠️ ' : '✅ '} {prediction}
+              </p>
+            ) : (
+              <p>Loading prediction...</p>
+            )}
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
 }
